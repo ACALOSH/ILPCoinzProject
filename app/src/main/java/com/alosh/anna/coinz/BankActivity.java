@@ -24,6 +24,7 @@ public class BankActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private  String tag = "BankActivity";
+    //public String bankbalance = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +54,16 @@ public class BankActivity extends AppCompatActivity {
             }
         });
 
-        DocumentReference docRef = db.collection("Users").document(email);
+       /* DocumentReference docRef = db.collection("Users").document(email);
         docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    Object wallet = document.get("Walletcoinz");
-                    Object bank = document.get("Bankcoinz");
+                    Object wallet = document.get("Wallet");
+                    String bank = document.get("Bankcoinz").toString();
+                    String wallet = document.get("Wallet").toString();
+                    String frens = document.get("Friends").toString();
                     if (document.exists()) {
                         Log.d(tag, "DocumentSnapshot data: " + document.getData());
                     } else {
@@ -70,7 +73,7 @@ public class BankActivity extends AppCompatActivity {
                     Log.d(tag, "get failed with ", task.getException());
                 }
             }
-        });
+        });*/
 
         // need to get exchange rate
 

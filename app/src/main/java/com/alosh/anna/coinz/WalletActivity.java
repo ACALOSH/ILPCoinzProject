@@ -20,10 +20,13 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
+import java.util.ArrayList;
+
 public class WalletActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private  String tag = "WalletActivity";
+    public String walletbalance ="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +35,7 @@ public class WalletActivity extends AppCompatActivity {
         String email = mAuth.getCurrentUser().getEmail();
 
         setContentView(R.layout.activity_wallet);
-        TextView walletamount = (TextView) findViewById(R.id.walletcoinzamount);
+        TextView textwalletamount = (TextView) findViewById(R.id.walletcoinzamount);
 
         FloatingActionButton back = (FloatingActionButton) findViewById(R.id.wbacktomap);
         back.setOnClickListener(new View.OnClickListener() {
@@ -49,26 +52,9 @@ public class WalletActivity extends AppCompatActivity {
             }
         });
 
-        DocumentReference docRef = db.collection("Users").document(email);
-        docRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    String wallet = document.get("Wallet").toString();
-                    if (document.exists()) {
-                        Log.d(tag, "DocumentSnapshot data: " + document.getData());
-                        //array of coinz in wallet, in the order shil, dolr, quid, peny
-                        walletamount.setText(wallet.charAt(1)+ " shils \n"+ wallet.charAt(4)+" dolrs \n"+wallet.charAt(7)+" quid \n"+wallet.charAt(10)+" penys");
-                    } else {
-                        Log.d(tag, "No such document");
-                    }
-                } else {
-                    Log.d(tag, "get failed with ", task.getException());
-                }
-            }
 
-        });
+        ArrayList<Float> wall = MainActivity.getWalletoverlord();
+        textwalletamount.setText(wall.get(0)+ " shils \n"+ wall.get(1)+" dolrs \n"+wall.get(2)+" quid \n"+wall.get(3)+" penys");
 
 
 

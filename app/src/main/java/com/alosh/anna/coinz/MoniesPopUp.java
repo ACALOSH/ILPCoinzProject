@@ -8,7 +8,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 
 public class MoniesPopUp extends AppCompatActivity {
 
@@ -24,6 +28,16 @@ public class MoniesPopUp extends AppCompatActivity {
             }
         });
 
+       /* ListView frens = (ListView) findViewById(R.id.listy);
+        frens.setAdapter(new ArrayAdapter< String >(this, R.layout.list_item, countries));
+        frens.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView <? > arg0, View view, int position, long id) {
+                // When clicked, store which one is clicked +highlight?
+
+            }
+
+        });*/
+
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
 
@@ -31,7 +45,7 @@ public class MoniesPopUp extends AppCompatActivity {
         int width = dm.widthPixels;
         int height = dm.heightPixels;
 
-        getWindow().setLayout(width, (int) (height*.6));
+        getWindow().setLayout(width, (int) (height*.75));
 
     }
 

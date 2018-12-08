@@ -58,7 +58,7 @@ package="com.alosh.anna.coinz">
     <activity
         android:name="com.alosh.anna.coinz.MoniesPopUp"
         android:label="@string/title_activity_monies_pop_up"
-        android:theme="@style/AppTheme.NoActionBar"></activity>
+        android:theme="@style/AppTheme.thempoppy"></activity>
 
 </application>
 
