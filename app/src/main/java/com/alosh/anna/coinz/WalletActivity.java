@@ -10,20 +10,20 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 
-public class BankActivity extends AppCompatActivity {
+public class WalletActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private  String tag = "BankActivity";
+    private  String tag = "WalletActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,25 +31,21 @@ public class BankActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
 
-        setContentView(R.layout.activity_bank);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+        setContentView(R.layout.activity_wallet);
+        TextView walletamount = (TextView) findViewById(R.id.walletcoinzamount);
 
-
-        FloatingActionButton back= (FloatingActionButton) findViewById(R.id.bbacktomap);
+        FloatingActionButton back = (FloatingActionButton) findViewById(R.id.wbacktomap);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(BankActivity.this, MainActivity.class));
+                startActivity(new Intent(WalletActivity.this, MainActivity.class));
             }
         });
-
-        Button signout = (Button) findViewById(R.id.signout);
-        signout.setOnClickListener(new View.OnClickListener() {
+        Button sendmonies = (Button) findViewById(R.id.button);
+        sendmonies.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                mAuth.signOut();
-                startActivity(new Intent(BankActivity.this, SignupActivity.class));
+                startActivity(new Intent(WalletActivity.this, MoniesPopUp.class));
             }
         });
 
@@ -59,10 +55,11 @@ public class BankActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if (task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    Object wallet = document.get("Walletcoinz");
-                    Object bank = document.get("Bankcoinz");
+                    String wallet = document.get("Wallet").toString();
                     if (document.exists()) {
                         Log.d(tag, "DocumentSnapshot data: " + document.getData());
+                        //array of coinz in wallet, in the order shil, dolr, quid, peny
+                        walletamount.setText(wallet.charAt(1)+ " shils \n"+ wallet.charAt(4)+" dolrs \n"+wallet.charAt(7)+" quid \n"+wallet.charAt(10)+" penys");
                     } else {
                         Log.d(tag, "No such document");
                     }
@@ -70,13 +67,13 @@ public class BankActivity extends AppCompatActivity {
                     Log.d(tag, "get failed with ", task.getException());
                 }
             }
+
         });
 
-        // need to get exchange rate
+
 
 
 
     }
-
 
 }
