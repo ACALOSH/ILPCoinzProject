@@ -2,10 +2,7 @@ package com.alosh.anna.coinz;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -16,18 +13,18 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.core.Query;
+//import com.google.firebase.firestore.CollectionReference;
+//import com.google.firebase.firestore.FirebaseFirestore;
+//import com.google.firebase.firestore.core.Query;
 
 import java.util.ArrayList;
 
 public class MoniesPopUp extends AppCompatActivity {
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    //private FirebaseFirestore db = FirebaseFirestore.getInstance();
     //POI means person of interest aka the person the user want to send money to
     private static String POI;
     public void setPOI(String POI) {
-        this.POI = POI;
+        MoniesPopUp.POI = POI;
     }
     public static String getPOI() {
         return POI;
@@ -37,19 +34,18 @@ public class MoniesPopUp extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_monies_pop_up);
-        CollectionReference Users = db.collection("Users");
 
         //allows friends to show up as a list
         ArrayList<String> friendlist = MainActivity.getFriendsoverlord();
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
                 R.layout.activity_listview, friendlist);
-        ListView frens = (ListView) findViewById(R.id.listy);
+        ListView frens = findViewById(R.id.listy);
         frens.setAdapter(adapter);
         frens.setOnItemClickListener(mMessageClickedHandler);
 
 
 
-        Button bye = (Button) findViewById(R.id.bye);
+        Button bye =  findViewById(R.id.bye);
         bye.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +58,7 @@ public class MoniesPopUp extends AppCompatActivity {
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hemail ==null || hemail.getText().toString()==" ") {
+                if (hemail ==null || hemail.getText().toString().equals(" ")) {
                     Toast.makeText(MoniesPopUp.this, "enter an email!", Toast.LENGTH_LONG).show();
                 }
                 else {

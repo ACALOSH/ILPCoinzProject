@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -20,11 +19,11 @@ import com.google.firebase.auth.FirebaseAuth;
 public class LoginActivity extends AppCompatActivity {
     private EditText inputEmail, inputPassword;
     private FirebaseAuth mAuth;
-    private Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -35,11 +34,11 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_login);
-        inputEmail = (EditText) findViewById(R.id.Email);
-        inputPassword = (EditText) findViewById(R.id.password);
+        inputEmail = findViewById(R.id.Email);
+        inputPassword = findViewById(R.id.password);
 
         //back button
-        FloatingActionButton back = (FloatingActionButton) findViewById(R.id.Back);
+        FloatingActionButton back = findViewById(R.id.Back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,7 +47,8 @@ public class LoginActivity extends AppCompatActivity {
         });
 
         //loginbutton
-        btnLogin = (Button) findViewById(R.id.Login);
+        Button btnLogin;
+        btnLogin = findViewById(R.id.Login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

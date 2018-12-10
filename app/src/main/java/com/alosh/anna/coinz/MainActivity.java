@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,7 +19,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mapbox.android.core.location.LocationEngine;
@@ -99,7 +97,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             String p = w.substring(1, w.length()-1);
 
             String[] tok = p.split(", ");
-            ArrayList<Float> nw = new ArrayList<Float>();
+            ArrayList<Float> nw = new ArrayList<>();
 
             for (String t : tok) {
 
@@ -127,11 +125,9 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public static void setFriendsoverlord(String s)
     {    if (s.contains("[")){
         String p = s.substring(1, s.length()-1);
-        ArrayList<String> myList = new ArrayList<>(Arrays.asList(p.split(",")));
-        Friendsoverlord = myList;}
+        Friendsoverlord = new ArrayList<>(Arrays.asList(p.split(",")));}
         else{
-        ArrayList<String> myList = new ArrayList<>(Arrays.asList(s.split(",")));
-        Friendsoverlord = myList;}
+        Friendsoverlord = new ArrayList<>(Arrays.asList(s.split(","))); }
 
     }
     public static ArrayList<String> getFriendsoverlord(){
@@ -525,7 +521,8 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         if (granted) {
             enableLocation();
         } else {
-            // Open a dialogue with the user
+            Toast.makeText(MainActivity.this, "you messed up GIVE US PERMISSION", Toast.LENGTH_LONG).show();
+
         }
     }
 

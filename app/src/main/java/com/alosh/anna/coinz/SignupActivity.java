@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -42,10 +41,10 @@ public class SignupActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_signup);
-        inputEmail = (EditText) findViewById(R.id.Email);
-        inputPassword = (EditText) findViewById(R.id.password);
-        btnSignup = (Button) findViewById(R.id.SignUp);
-        btnLogin = (Button) findViewById(R.id.Login);
+        inputEmail = findViewById(R.id.Email);
+        inputPassword = findViewById(R.id.password);
+        btnSignup = findViewById(R.id.SignUp);
+        btnLogin = findViewById(R.id.Login);
 
 
         //goes to login page

@@ -13,5 +13,6 @@
     <string name="title_activity_bank_pop_up">BankPopUp</string>
     <string name="title_activity_listview">Listview</string>
     <string name="title_activity_transferring_coins">TransferringCoins</string>
+    <string name="winner">you won. congrats. Here is a meaningless compass.</string>
 
 </resources>

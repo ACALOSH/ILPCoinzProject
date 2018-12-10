@@ -2,25 +2,17 @@ package com.alosh.anna.coinz;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
@@ -32,7 +24,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public class BankPopUp extends AppCompatActivity {
-    private FirebaseAuth mAuth;
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private String tag ="Bank popup";
     //cpd is current coin count as to not go over the 50 coin limit
@@ -42,6 +34,7 @@ public class BankPopUp extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        FirebaseAuth mAuth;
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
         CollectionReference Users = db.collection("Users");
@@ -70,7 +63,7 @@ public class BankPopUp extends AppCompatActivity {
 
 
 
-        Button back = (Button) findViewById(R.id.backk);
+        Button back = findViewById(R.id.backk);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -93,8 +86,8 @@ public class BankPopUp extends AppCompatActivity {
                 float bankbalance = (MainActivity.getBankoverlord() +deposit);
 
                 //update wallet
-                ArrayList<Float> depositwallet = new ArrayList<Float> (Arrays.asList(BankActivity.getSdeposit(), BankActivity.getDdeposit(), BankActivity.getQdeposit(), BankActivity.getPdeposit()));
-                ArrayList<Float> updatedwallet = new ArrayList<Float>();
+                ArrayList<Float> depositwallet = new ArrayList<> (Arrays.asList(BankActivity.getSdeposit(), BankActivity.getDdeposit(), BankActivity.getQdeposit(), BankActivity.getPdeposit()));
+                ArrayList<Float> updatedwallet = new ArrayList<>();
                 for (int i =0; i<4; i++){
                     updatedwallet.add(i,(MainActivity.getWalletoverlord().get(i) - depositwallet.get(i)));
                     MainActivity.getWalletoverlord().remove(i);
@@ -107,7 +100,7 @@ public class BankPopUp extends AppCompatActivity {
                 data1.put("Wallet", MainActivity.getWalletoverlord());
                 data1.put("BankCoinz", bankbalance);
                 data1.put("Friends", MainActivity.getFriendsoverlord());
-                Users.document(mAuth.getCurrentUser().getEmail()).set(data1);
+                Users.document(email).set(data1);
 
                 //updates coin limit counter
                 setCpd(getCpd()+coinzadded);

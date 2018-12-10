@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -12,15 +11,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 
 public class BankActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private  String tag = "BankActivity";
     //public String bankbalance = "";
     private static Float sdeposit;
@@ -49,15 +44,13 @@ public class BankActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAuth = FirebaseAuth.getInstance();
-        String email = mAuth.getCurrentUser().getEmail();
         setContentView(R.layout.activity_bank);
 
 
-        EditText shilbox = (EditText) findViewById(R.id.shilltext);
-        EditText dolrbox = (EditText) findViewById(R.id.dolrrtext);
-        EditText quidbox = (EditText) findViewById(R.id.quiddtext);
-        EditText penybox = (EditText) findViewById(R.id.penyytext);
+        EditText shilbox = findViewById(R.id.shilltext);
+        EditText dolrbox = findViewById(R.id.dolrrtext);
+        EditText quidbox = findViewById(R.id.quiddtext);
+        EditText penybox = findViewById(R.id.penyytext);
         ArrayList<EditText> boxes = new ArrayList<>(Arrays.asList(shilbox,dolrbox,quidbox,penybox));
         TextView shillb = findViewById(R.id.monieshil);
         shillb.setText("From "+MainActivity.getWalletoverlord().get(0).toString()+" SHIL");
@@ -71,7 +64,7 @@ public class BankActivity extends AppCompatActivity {
 
 
 
-        FloatingActionButton back= (FloatingActionButton) findViewById(R.id.bbacktomap);
+        FloatingActionButton back= findViewById(R.id.bbacktomap);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -79,7 +72,7 @@ public class BankActivity extends AppCompatActivity {
             }
        });
 
-        Button pocket = (Button) findViewById(R.id.pocket);
+        Button pocket = findViewById(R.id.pocket);
         pocket.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -127,7 +120,7 @@ public class BankActivity extends AppCompatActivity {
             }
         });
 
-        TextView ex = (TextView) findViewById(R.id.exchrates);
+        TextView ex = findViewById(R.id.exchrates);
         ArrayList<Float> exchange = MainActivity.getCurrencyEx();
         ex.setText("1 SHIL = "+exchange.get(0) +" GOLD \n 1 DOLR = " + exchange.get(1) + " GOLD \n 1 QUID = "+ exchange.get(2)+ " GOLD \n 1 PENY = "+ exchange.get(3) +" GOLD");
 
