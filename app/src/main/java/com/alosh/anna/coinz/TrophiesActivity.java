@@ -7,15 +7,19 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 public class TrophiesActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        TextView txt = findViewById(R.id.textView6);
+        ImageView Trophy = findViewById(R.id.imageView);
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_trophies);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
         FloatingActionButton back = (FloatingActionButton) findViewById(R.id.tbacktomap);
         back.setOnClickListener(new View.OnClickListener() {
@@ -24,6 +28,12 @@ public class TrophiesActivity extends AppCompatActivity {
                 startActivity(new Intent(TrophiesActivity.this, MainActivity.class));
             }
         });
+
+        //if your bank balance is over 100000 you win
+        if( MainActivity.getBankoverlord()> 1000000000){
+            Trophy.setImageResource(R.drawable.mapbox_compass_icon);
+            txt.setText("you won. congrats. Here is a meaningless compass.");
+        }
     }
 
 }

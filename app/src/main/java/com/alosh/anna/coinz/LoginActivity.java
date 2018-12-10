@@ -28,6 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
+        //if there's a user already signed in, go directly to main activity
         if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(LoginActivity.this, MainActivity.class));
             finish();
@@ -36,9 +37,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         inputEmail = (EditText) findViewById(R.id.Email);
         inputPassword = (EditText) findViewById(R.id.password);
-        btnLogin = (Button) findViewById(R.id.Login);
-        FloatingActionButton back = (FloatingActionButton) findViewById(R.id.Back);
 
+        //back button
+        FloatingActionButton back = (FloatingActionButton) findViewById(R.id.Back);
         back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,9 +47,12 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //loginbutton
+        btnLogin = (Button) findViewById(R.id.Login);
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //sets email and password to the inputed fields
                 String email = inputEmail.getText().toString();
                 final String password = inputPassword.getText().toString();
 

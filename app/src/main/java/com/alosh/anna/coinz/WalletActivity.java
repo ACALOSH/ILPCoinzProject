@@ -10,6 +10,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,7 +27,7 @@ public class WalletActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private  String tag = "WalletActivity";
-    public String walletbalance ="";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,12 @@ public class WalletActivity extends AppCompatActivity {
         String email = mAuth.getCurrentUser().getEmail();
 
         setContentView(R.layout.activity_wallet);
+
+        //shows wallet
         TextView textwalletamount = (TextView) findViewById(R.id.walletcoinzamount);
+        ArrayList<Float> wall = MainActivity.getWalletoverlord();
+        textwalletamount.setText(wall.get(0)+ " shils \n"+ wall.get(1)+" dolrs \n"+wall.get(2)+" quid \n"+wall.get(3)+" penys");
+
 
         FloatingActionButton back = (FloatingActionButton) findViewById(R.id.wbacktomap);
         back.setOnClickListener(new View.OnClickListener() {
@@ -44,6 +50,8 @@ public class WalletActivity extends AppCompatActivity {
                 startActivity(new Intent(WalletActivity.this, MainActivity.class));
             }
         });
+
+
         Button sendmonies = (Button) findViewById(R.id.button);
         sendmonies.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -53,8 +61,15 @@ public class WalletActivity extends AppCompatActivity {
         });
 
 
-        ArrayList<Float> wall = MainActivity.getWalletoverlord();
-        textwalletamount.setText(wall.get(0)+ " shils \n"+ wall.get(1)+" dolrs \n"+wall.get(2)+" quid \n"+wall.get(3)+" penys");
+        //signs out
+        Button signout = (Button) findViewById(R.id.signout);
+        signout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mAuth.signOut();
+                startActivity(new Intent(WalletActivity.this, SignupActivity.class));
+            }
+        });
 
 
 

@@ -10,4 +10,8 @@
     <string name="title_activity_wallet">WalletActivity</string>
     <string name="title_activity_trophies">TrophiesActivity</string>
     <string name="title_activity_monies_pop_up">MoniesPopUp</string>
+    <string name="title_activity_bank_pop_up">BankPopUp</string>
+    <string name="title_activity_listview">Listview</string>
+    <string name="title_activity_transferring_coins">TransferringCoins</string>
+
 </resources>

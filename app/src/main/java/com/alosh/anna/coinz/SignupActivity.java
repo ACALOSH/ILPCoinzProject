@@ -35,6 +35,7 @@ public class SignupActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         CollectionReference Users = db.collection("Users");
 
+        //if there is a current user signed in, then goes directly to main view
         if (mAuth.getCurrentUser() != null) {
             startActivity(new Intent(SignupActivity.this, MainActivity.class));
             finish();
@@ -46,6 +47,8 @@ public class SignupActivity extends AppCompatActivity {
         btnSignup = (Button) findViewById(R.id.SignUp);
         btnLogin = (Button) findViewById(R.id.Login);
 
+
+        //goes to login page
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,6 +56,7 @@ public class SignupActivity extends AppCompatActivity {
             }
         });
 
+        //setting sign up button
         btnSignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -81,22 +85,21 @@ public class SignupActivity extends AppCompatActivity {
                         .addOnCompleteListener(SignupActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
-                                Toast.makeText(SignupActivity.this, "createUserWithEmail:onComplete:" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
-                                // If sign in fails, display a message to the user. If sign in succeeds
-                                // the auth state listener will be notified and logic to handle the
-                                // signed in user can be handled in the listener.
                                 if (!task.isSuccessful()) {
                                     Toast.makeText(SignupActivity.this, "Authentication failed." + task.getException(),
                                             Toast.LENGTH_SHORT).show();
                                 } else {
+                                    Toast.makeText(SignupActivity.this, "Created account!" + task.isSuccessful(), Toast.LENGTH_SHORT).show();
 
+                                    //sets baseline info in firestore
                                     Map<String, Object> data1 = new HashMap<>();
                                     //array of coinz in wallet, in the order shil, dolr, quid, peny
-                                    data1.put("WalletCoinz", Arrays.asList("0","0","0","0"));
+                                    data1.put("Wallet", Arrays.asList("0","0","0","0"));
                                     data1.put("BankCoinz", 0);
-                                    data1.put("Friends", Arrays.asList(""));
+                                    data1.put("Friends", Arrays.asList("automaticfriend@notlonely.com"));
                                     Users.document(mAuth.getCurrentUser().getEmail()).set(data1);
 
+                                    //goes to main
                                     startActivity(new Intent(SignupActivity.this, MainActivity.class));
                                     finish();
                                 }

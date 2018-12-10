@@ -20,6 +20,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
+import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.mapbox.android.core.location.LocationEngine;
 import com.mapbox.android.core.location.LocationEngineListener;
@@ -56,6 +58,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
+import static com.mapbox.geojson.Geometry.fromJson;
+
 
 public class MainActivity extends AppCompatActivity implements OnMapReadyCallback, LocationEngineListener, PermissionsListener {
     private  String tag = "MainActivity";
@@ -78,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
 
+    //this is the user wallet information
     private static ArrayList<Float> Walletoverlord;
     public void setWalletoverlord(String w)
     {
@@ -101,25 +106,23 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 nw.add(Float.parseFloat(t));
                 Walletoverlord = nw;
             }
-
         }
-
-
     }
     public static ArrayList<Float> getWalletoverlord(){
         return Walletoverlord;
     }
 
-
-    private static int Bankoverlord;
-    public static void setBankoverlord(int b) {
+    //this is the user's bank balance
+    private static float Bankoverlord;
+    public static void setBankoverlord(float b) {
         Bankoverlord = b;
     }
-    public static int getBankoverlord() {
+    public static float getBankoverlord() {
         return Bankoverlord;
     }
 
 
+    //this is the user's friend information
     private static ArrayList<String> Friendsoverlord;
     public static void setFriendsoverlord(String s)
     {    if (s.contains("[")){
@@ -135,6 +138,39 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return Friendsoverlord;
     }
 
+   // variable dedicated to coins that have been transferred to the user, gotten from firestore
+    private static Float Transferedcoinz = Float.parseFloat("0.0");
+    public static void setTransferedcoinz(Float transferedcoinz) { Transferedcoinz = transferedcoinz; }
+    public static Float getTransferedcoinz() { return Transferedcoinz; }
+
+    //Array of the Currency Exchange, gotten from json
+    private static ArrayList<Float> CurrencyEx;
+    public static void setCurrencyEx(String str) {
+        if (str.contains("}")){
+            str= str.substring(0,str.length()-1);
+            }
+        String[] sp = str.split(", ");
+        ArrayList<Float> curr = new ArrayList<>();
+        ArrayList<String> myList = new ArrayList<>();
+        for (String t : sp) {
+            String[] c = t.split("=");
+            if (c.length==2){
+                myList.add(c[1]);}
+            else {
+                myList.add(c[0]);
+            }
+        }
+        for (String t : myList) {
+            curr.add(Float.parseFloat(t));
+            }
+        CurrencyEx=curr;
+        Log.d("Main", "Currency success " +curr);
+    }
+    public static ArrayList<Float> getCurrencyEx() {
+        return CurrencyEx;
+    }
+
+    //Array of the markers currency for ease
     private static ArrayList<String> markercur = new ArrayList<>();
     public static void setMarkercur(ArrayList<String> markercur) {
         MainActivity.markercur = markercur;
@@ -143,6 +179,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return markercur;
     }
 
+    //Array of the markers value for ease
     private static ArrayList<Float> markerval = new ArrayList<>();
     public static void setMarkerval(ArrayList<Float> markerval) {
         MainActivity.markerval = markerval;
@@ -151,35 +188,35 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         return markerval;
     }
 
-    private static ArrayList<String> markerid = new ArrayList<>();
-    public static void setMarkerid(ArrayList<String> markerid) {
-        MainActivity.markerid = markerid;
-    }
-    public static ArrayList<String> getMarkerid() {
-        return markerid;
-    }
+
+    //Dialouge list for a little bit of fun when collecting markers, shows up when you collect markers
+    private ArrayList<String> dialougelist = new ArrayList<>(Arrays.asList("You managed to hand in an assignment!","You avoided a mormon!","You didn\'t forget your student card!",
+            "You got an email, class is canceled!", "You made it to your 9am!","You found a seat in the Library","You saw a dog!","Your friend invited you to drinks at PearTree",
+            "There's free food in Appleton!","Your bike didn\\'t get stolen!"));
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        FloatingActionButton Wallet = findViewById(R.id.Wallet);
-        FloatingActionButton Bank = findViewById(R.id.Bank);
-        FloatingActionButton Trophies = findViewById(R.id.Trophies);
+
+
         mAuth = FirebaseAuth.getInstance();
         String email = mAuth.getCurrentUser().getEmail();
         CollectionReference Users = db.collection("Users");
 
 
+        //sets the buttons to go to their designated places
+        FloatingActionButton Wallet = findViewById(R.id.Wallet);
+        FloatingActionButton Bank = findViewById(R.id.Bank);
+        FloatingActionButton Trophies = findViewById(R.id.Trophies);
         Wallet.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, WalletActivity.class)));
-
         Bank.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BankActivity.class)));
-
         Trophies.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, TrophiesActivity.class)));
 
 
+        //sets up mapbox
         Mapbox.getInstance(this, "pk.eyJ1IjoiczE2MDE4NDciLCJhIjoiY2puMXBoeXplMnNicTNxbzhhYWFmbnhqZyJ9.hTS5UNqpWkpg2Fcy4z4fAQ");
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
@@ -199,7 +236,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                         //sets it to the public static var
                         setWalletoverlord(wallet);
                         //stores bank balance and sets it to the public var
-                        int bank = (int) (long) document.get("BankCoinz");
+                        float bank = Float.parseFloat(document.get("BankCoinz").toString());
                         setBankoverlord(bank);
                         //same here for the list of friends
                         String frens = document.get("Friends").toString();
@@ -213,7 +250,42 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
                 }
             }
         });
-    }
+        //this get the transferred coinz
+        DocumentReference transcoinz = db.collection("Users").document(email+"transferred");
+        transcoinz.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    Log.d(tag, "Accessing Database");
+                    if (document.exists()) {
+                        Float ct = Float.parseFloat(document.get("coinz").toString());
+                        //sets transferred coinz from the database to the private instance
+                        setTransferedcoinz(ct);
+                        //this sets the transferred coinz variable to 0 in the database
+                        Map<String, Object> data3 = new HashMap<>();
+                        data3.put("coinz", 0);
+                        Users.document(email + "transferred").set(data3);
+
+                    } else {
+                        Log.d(tag, "No such document");
+                    }
+                }
+                else {
+                Log.d(tag, "get failed with ", task.getException());
+                }
+                //updates the user's bank balance and lets them know they've been transferred coinz
+                setBankoverlord(getBankoverlord()+getTransferedcoinz());
+                if (!(getTransferedcoinz()==0)) {
+                    Toast.makeText(MainActivity.this, "Your Friends transferred you " + getTransferedcoinz() + " GOLD", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+
+    }//end of on create
+
+
 
     @Override
     public void onMapReady(MapboxMap mapboxMap)  {
@@ -223,18 +295,19 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
        if (FromFile.contains(date)){
            mapData = FromFile.getString(date, "");
-           // log.d mesg  onready map data tken from file
+           //if there is already data saved in preferences
            Log.d(tag, "[onMapReady] fromfilemapdata ="+ mapData);
        }
        else{
-           // log.d msg onready map data taken from server
-           DownloadFileTask download =new DownloadFileTask();
+           //else map data taken from server
            Log.d(tag, "[onMapReady] date ="+ date);
+
+           DownloadFileTask download =new DownloadFileTask();
            download.execute("http://homepages.inf.ed.ac.uk/stg/coinz/"+ date +"/coinzmap.geojson");
            try{mapData= download.get(); }
            catch (ExecutionException e){e.printStackTrace();}
            catch (InterruptedException e) {e.printStackTrace();}
-           //Log.d(tag, "[onMapReady] connection error catch"+ mapData);
+           Log.d(tag, "[onMapReady] connection error catch"+ mapData);
            if (mapData == null) { Log.d(tag, "[onMapReady] mapdata is null"); }
        }
 
@@ -245,35 +318,44 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
             // Set user interface options
             map.getUiSettings().setCompassEnabled(true);
             map.getUiSettings().setZoomControlsEnabled(true);
-            //map.addOnMapClickListener(this::onMapClick);
+            //this sets the onMarkerclick method as the one at the bottom
             map.setOnMarkerClickListener(this::onMarkerClick);
 
 
             // Make location information available
             enableLocation();
 
+
+            //mmm watcha sayyy aw, that you only meant well?
+            Map jsonderulo = new Gson().fromJson(mapData, Map.class);
+            //gets rates
+            String awrats = jsonderulo.get("rates").toString();
+            setCurrencyEx(awrats);
+
+            Log.d(tag, "gson " +jsonderulo.get("rates"));
+
+
+            //gets the list of markers
             List<Feature> features = FeatureCollection.fromJson(mapData).features();
-//            List<Feature> rates = FeatureCollection.fromJson(mapData);
-            //Log.d(tag, "mapData is:"+ mapData);
+            Log.d(tag, "feats is:"+ features);
+            // we make these lists bc we need them for this upcoming marker for loop
             ArrayList<String> mrkrscurrency = new ArrayList<>();
             ArrayList<Float> mrkrsvls = new ArrayList<>();
-            //double rates = JsonObject.getJsonObject(“rates”).getdouble(currency);
+
 
             for (int i = 0; i<features.size(); i++){
                 try{
+                    //extracts data from marker feature collection
                     JSONObject jsonObject = new JSONObject(features.get(i).toJson());
                     JSONArray coordinates = jsonObject.getJSONObject("geometry").getJSONArray("coordinates");
                     double lng = Double.parseDouble(coordinates.get(0).toString());
                     double lat = Double.parseDouble(coordinates.get(1).toString());
-                    //String type =  jsonObject.getJSONObject("properties").get("");
                     String id = jsonObject.getJSONObject("properties").getString("id");
                     double value = jsonObject.getJSONObject("properties").getDouble("value");
                     String strValue = Double.toString(value);
                     String currency = jsonObject.getJSONObject("properties").getString("currency");
-                  // get lat, lng, type, id , value, <- str value,  currency, markersymbol
-                  // create new coin also make coin java class new coin(id, value, currency,lng, lat)
-                  //  coin.coins.put(id,coin)
 
+                    //adds marker with properties extracted above
                     mapboxMap.addMarker(new MarkerOptions()
                     .position(new LatLng(lat,lng))
                     .title(id)
@@ -293,7 +375,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
 
 
 
-    }
+    }// end of onmapready
 
 
     @Override
@@ -321,6 +403,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
     public void onStop() {
         super.onStop();
         mapView.onStop();
+        //sharedpref stuff
         SharedPreferences FromFile = getSharedPreferences(PreferenceFile, Context.MODE_PRIVATE);
         if (FromFile.contains(date)){
             Log.d(tag, "[onStop] mapdata already saved");
@@ -446,6 +529,7 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         }
     }
 
+    //this is activated everytime someone clicks on a marker
     public boolean onMarkerClick(Marker mr){
 
         mAuth = FirebaseAuth.getInstance();
@@ -453,81 +537,93 @@ public class MainActivity extends AppCompatActivity implements OnMapReadyCallbac
         CollectionReference Users = db.collection("Users");
         List<Marker> mrkrs = map.getMarkers();
 
-            String cur = getMarkercur().get(mrkrs.indexOf(mr));
-            Log.d(tag, "curr is"+ cur);
-            Float val = getMarkerval().get(mrkrs.indexOf(mr));
-            ArrayList<String>mid = getMarkerid();
-            Log.d(tag, mr.getTitle());
+        //gets currency of the marker
+        String cur = getMarkercur().get(mrkrs.indexOf(mr));
+        Log.d(tag, "curr is "+ cur);
+        //gets value of marker
+        Float val = getMarkerval().get(mrkrs.indexOf(mr));
+        Log.d(tag, mr.getTitle());
+        //gets current location
+        LatLng loc = new LatLng(originLocation.getLatitude(), originLocation.getLongitude());
+        //gets a random dialouge from list
+        String dialouge = dialougelist.get((int )(Math.random() * 9));
 
-
-            LatLng loc = new LatLng(originLocation.getLatitude(), originLocation.getLongitude());
-            if (mr.getPosition().distanceTo(loc)<=25 && !mid.contains(mr.getTitle())){
+           //if user is within 25meters of the marker
+            if (mr.getPosition().distanceTo(loc)<=25){
 
                         switch (cur){
                             case ("SHIL") :
+                                //adds value to wallet
                                 Float updatedshil = Walletoverlord.get(0)+val;
                                 Walletoverlord.remove(0);
                                 Walletoverlord.add(0, updatedshil);
+                                //rewrites data in firestore
                                 Map<String, Object> dataupdate = new HashMap<>();
                                 //array of coinz in wallet, in the order shil, dolr, quid, peny
                                 dataupdate.put("Wallet", Walletoverlord);
                                 dataupdate.put("BankCoinz", Bankoverlord);
                                 dataupdate.put("Friends", Friendsoverlord);
                                 Users.document(email).set(dataupdate);
-                                Toast.makeText(MainActivity.this, "You have acquired:"+val+" shil!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, dialouge+"\n You have acquired:"+val+" shil!", Toast.LENGTH_LONG).show();
                                 break;
 
                             case ("DOLR"):
+                                //adds value to wallet
                                 Float updateddolr = Walletoverlord.get(1)+val;
                                 Walletoverlord.remove(1);
                                 Walletoverlord.add(1, updateddolr);
+                                //rewrites data in firestore
                                 Map<String, Object> dataupdate1 = new HashMap<>();
                                 //array of coinz in wallet, in the order shil, dolr, quid, peny
                                 dataupdate1.put("Wallet", Walletoverlord);
                                 dataupdate1.put("BankCoinz", Bankoverlord);
                                 dataupdate1.put("Friends", Friendsoverlord);
                                 Users.document(email).set(dataupdate1);
-                                Toast.makeText(MainActivity.this, "You have acquired:"+val+" dolrs!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, dialouge+"\n You have acquired:"+val+" dolrs!", Toast.LENGTH_LONG).show();
                                 break;
 
                             case ("QUID"):
-                                Log.d(tag, "running quid");
+                                //adds value to wallet
                                 Float updatedquid = Walletoverlord.get(2)+val;
                                 Walletoverlord.remove(2);
                                 Walletoverlord.add(2, updatedquid);
+                                //rewrites data in firestore
                                 Map<String, Object> dataupdate2 = new HashMap<>();
                                 //array of coinz in wallet, in the order shil, dolr, quid, peny
                                 dataupdate2.put("Wallet", Walletoverlord);
                                 dataupdate2.put("BankCoinz", Bankoverlord);
                                 dataupdate2.put("Friends", Friendsoverlord);
                                 Users.document(email).set(dataupdate2);
-                                Toast.makeText(MainActivity.this, "You have acquired:"+val+" quid!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, dialouge+"\n You have acquired:"+val+" quid!", Toast.LENGTH_LONG).show();
                                 break;
 
                             case ("PENY"):
+                                //adds value to wallet
                                 Float updatedpeny = Walletoverlord.get(3)+val;
                                 Walletoverlord.remove(3);
                                 Walletoverlord.add(3, updatedpeny);
+                                //rewrites data in firestore
                                 Map<String, Object> dataupdate3 = new HashMap<>();
                                 //array of coinz in wallet, in the order shil, dolr, quid, peny
                                 dataupdate3.put("Wallet", Walletoverlord);
                                 dataupdate3.put("BankCoinz", Bankoverlord);
                                 dataupdate3.put("Friends", Friendsoverlord);
                                 Users.document(email).set(dataupdate3);
-                                Toast.makeText(MainActivity.this, "You have acquired:"+val+" penys!", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, dialouge+"\n You have acquired:"+val+" penys!", Toast.LENGTH_LONG).show();
                                 break;
 
                                 }
 
 
-                mid.add(mr.getTitle());
-                setMarkerid(mid);
-                Log.d(tag, "cleeck was succesful");
+
+                map.removeMarker(mr);
+                Log.d(tag, "cleek was succesful");
+
                 return true;
 
             }
            else{
-                Log.d(tag, "was already cleecked" +markerid);
+                Log.d(tag, "Cleek error");
                 return false;
             }
 

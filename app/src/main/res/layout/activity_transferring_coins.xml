@@ -2,80 +2,17 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/coordinatorLayout9"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".BankActivity"
-    android:id="@+id/coordinatorLayout4">
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/bbacktomap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.02"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.97"
-        app:srcCompat="?attr/actionModeCloseDrawable" />
-
-    <Button
-        android:id="@+id/pocket"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Empty ya pockets"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/moniespeny"
-        app:layout_constraintVertical_bias="0.16000003" />
+    tools:context=".TransferringCoins">
 
     <TextView
-        android:id="@+id/textView3"
-        android:layout_width="334dp"
-        android:layout_height="46dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text="Today's Exchange Rates:"
-        android:textSize="25sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.060000002" />
-
-    <TextView
-        android:id="@+id/exchrates"
-        android:layout_width="323dp"
-        android:layout_height="168dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
-        android:text=" "
-        android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/monieshil"
+        android:id="@+id/shilltext"
         android:layout_width="222dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:text="FROM 0 SHIL"
@@ -83,12 +20,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toEndOf="@+id/shilltext"
-        app:layout_constraintTop_toBottomOf="@+id/exchrates"
-        app:layout_constraintVertical_bias="0.01999998" />
+        app:layout_constraintStart_toEndOf="@+id/shilamount"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.38" />
 
     <TextView
-        android:id="@+id/moniesdolr"
+        android:id="@+id/dolrrtext"
         android:layout_width="222dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
@@ -100,12 +37,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toEndOf="@+id/dolrrtext"
-        app:layout_constraintTop_toBottomOf="@+id/monieshil"
+        app:layout_constraintStart_toEndOf="@+id/dolramount"
+        app:layout_constraintTop_toBottomOf="@+id/shilltext"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/moniesquid"
+        android:id="@+id/quiddtext"
         android:layout_width="222dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
@@ -117,12 +54,12 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toEndOf="@+id/quiddtext"
-        app:layout_constraintTop_toBottomOf="@+id/moniesdolr"
+        app:layout_constraintStart_toEndOf="@+id/quidamount"
+        app:layout_constraintTop_toBottomOf="@+id/dolrrtext"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
-        android:id="@+id/moniespeny"
+        android:id="@+id/penyytext"
         android:layout_width="222dp"
         android:layout_height="38dp"
         android:layout_marginStart="8dp"
@@ -133,31 +70,46 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintStart_toEndOf="@+id/penyytext"
-        app:layout_constraintTop_toBottomOf="@+id/moniesquid"
+        app:layout_constraintStart_toEndOf="@+id/penyamount"
+        app:layout_constraintTop_toBottomOf="@+id/quiddtext"
         app:layout_constraintVertical_bias="0.060000002" />
 
     <EditText
-        android:id="@+id/dolrrtext"
+        android:id="@+id/shilamount"
         android:layout_width="72dp"
         android:layout_height="39dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:ems="10"
         android:inputType="numberDecimal"
         android:text="0.0"
-        android:textAllCaps="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/shilltext"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.38" />
 
     <EditText
-        android:id="@+id/penyytext"
+        android:id="@+id/dolramount"
+        android:layout_width="72dp"
+        android:layout_height="39dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:ems="10"
+        android:inputType="numberDecimal"
+        android:text="0.0"
+        android:textAllCaps="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.15"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/shilamount" />
+
+    <EditText
+        android:id="@+id/penyamount"
         android:layout_width="72dp"
         android:layout_height="40dp"
         android:layout_marginStart="8dp"
@@ -171,11 +123,11 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/quiddtext"
+        app:layout_constraintTop_toBottomOf="@+id/quidamount"
         app:layout_constraintVertical_bias="0.0" />
 
     <EditText
-        android:id="@+id/quiddtext"
+        android:id="@+id/quidamount"
         android:layout_width="72dp"
         android:layout_height="41dp"
         android:layout_marginStart="8dp"
@@ -189,28 +141,39 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.15"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/dolrrtext"
+        app:layout_constraintTop_toBottomOf="@+id/dolramount"
         app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/shilltext"
-        android:layout_width="72dp"
-        android:layout_height="39dp"
+
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="480dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="13dp"
+        android:text="back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.07"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/sendmoney"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:ems="10"
-        android:inputType="numberDecimal"
-        android:text="0.0"
-        app:layout_constraintBottom_toTopOf="@+id/pocket"
+        android:text="send money"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.15"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/exchrates"
-        app:layout_constraintVertical_bias="0.0" />
-
-
-
-
+        app:layout_constraintHorizontal_bias="0.81"
+        app:layout_constraintStart_toEndOf="@+id/button2"
+        app:layout_constraintTop_toBottomOf="@+id/penyytext"
+        app:layout_constraintVertical_bias="0.85" />
 </android.support.constraint.ConstraintLayout>

@@ -7,85 +7,74 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="396dp"
-            android:layout_height="59dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="404dp"
-            android:layout_marginEnd="8dp"
-            android:background="?attr/colorPrimary"
-            android:minHeight="?attr/actionBarSize"
-            android:theme="?attr/actionBarTheme"
-            mapbox:layout_constraintBottom_toBottomOf="parent"
-            mapbox:layout_constraintEnd_toEndOf="parent"
-            mapbox:layout_constraintHorizontal_bias="0.285"
-            mapbox:layout_constraintStart_toStartOf="parent"
-            mapbox:layout_constraintTop_toTopOf="@+id/mapView"
-            mapbox:layout_constraintVertical_bias="1.0" />
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintHorizontal_bias="0.0"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toTopOf="parent"
+        mapbox:layout_constraintVertical_bias="0.0"
+        mapbox:mapbox_cameraZoom="11"
+        mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10">
 
-        <com.mapbox.mapboxsdk.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            mapbox:layout_constraintBottom_toBottomOf="parent"
-            mapbox:layout_constraintEnd_toEndOf="parent"
-            mapbox:layout_constraintStart_toStartOf="parent"
-            mapbox:layout_constraintTop_toTopOf="parent"
-            mapbox:mapbox_cameraZoom="11"
-            mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10">
+    </com.mapbox.mapboxsdk.maps.MapView>
 
-        </com.mapbox.mapboxsdk.maps.MapView>
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/Bank"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        mapbox:backgroundTint="@color/colorPrimaryDark"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintHorizontal_bias="0.92"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toBottomOf="@+id/Trophies"
+        mapbox:layout_constraintVertical_bias="0.04000002"
+        mapbox:srcCompat="@android:drawable/ic_menu_myplaces" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/Bank"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            mapbox:backgroundTint="@color/colorPrimaryDark"
-            mapbox:layout_constraintBottom_toBottomOf="@+id/mapView"
-            mapbox:layout_constraintEnd_toEndOf="parent"
-            mapbox:layout_constraintHorizontal_bias="0.52"
-            mapbox:layout_constraintStart_toEndOf="@+id/Trophies"
-            mapbox:layout_constraintTop_toTopOf="@+id/toolbar"
-            mapbox:srcCompat="@android:drawable/ic_menu_myplaces" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/Trophies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        mapbox:backgroundTint="@color/colorPrimaryDark"
+        mapbox:layout_constraintBottom_toBottomOf="parent"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintHorizontal_bias="0.92"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toBottomOf="@+id/Wallet"
+        mapbox:layout_constraintVertical_bias="0.04000002"
+        mapbox:srcCompat="@android:drawable/btn_star_big_off" />
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/Trophies"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            mapbox:backgroundTint="@color/colorPrimaryDark"
-            mapbox:layout_constraintBottom_toBottomOf="parent"
-            mapbox:layout_constraintEnd_toEndOf="parent"
-            mapbox:layout_constraintStart_toStartOf="@+id/toolbar"
-            mapbox:layout_constraintTop_toTopOf="@+id/toolbar"
-            mapbox:srcCompat="@android:drawable/btn_star_big_off" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/Wallet"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
-            android:clickable="true"
-            mapbox:backgroundTint="@color/colorPrimaryDark"
-            mapbox:layout_constraintBottom_toBottomOf="@+id/mapView"
-            mapbox:layout_constraintEnd_toStartOf="@+id/Trophies"
-            mapbox:layout_constraintHorizontal_bias="0.45"
-            mapbox:layout_constraintStart_toStartOf="@+id/toolbar"
-            mapbox:layout_constraintTop_toTopOf="@+id/toolbar"
-            mapbox:srcCompat="@android:drawable/sym_action_email" />
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/Wallet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        mapbox:backgroundTint="@color/colorPrimaryDark"
+        mapbox:layout_constraintBottom_toBottomOf="@+id/mapView"
+        mapbox:layout_constraintEnd_toEndOf="parent"
+        mapbox:layout_constraintHorizontal_bias="0.92"
+        mapbox:layout_constraintStart_toStartOf="parent"
+        mapbox:layout_constraintTop_toTopOf="parent"
+        mapbox:layout_constraintVertical_bias="0.100000024"
+        mapbox:srcCompat="@android:drawable/sym_action_email" />
 
 
 </android.support.constraint.ConstraintLayout>
