@@ -65,59 +65,56 @@ public class BankActivity extends AppCompatActivity {
 
 
         FloatingActionButton back= findViewById(R.id.bbacktomap);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(BankActivity.this, MainActivity.class));
-            }
-       });
+        back.setOnClickListener(view -> startActivity(new Intent(BankActivity.this, MainActivity.class)));
 
         Button pocket = findViewById(R.id.pocket);
-        pocket.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Float z = Float.parseFloat("0.0");
-                ArrayList<Float> bxam = new ArrayList<>();
-                for(EditText b : boxes){
-                    if (b.getText().toString().isEmpty()) {
-                        bxam.add(z);
-                    } else {
-                        bxam.add(Float.parseFloat(b.getText().toString()));
-                    }
+        pocket.setOnClickListener(v -> {
+            Float z = Float.parseFloat("0.0");
+            ArrayList<Float> bxam = new ArrayList<>();
+            for(EditText b : boxes){
+                if (b.getText().toString().isEmpty()) {
+                    bxam.add(z);
+                } else {
+                    bxam.add(Float.parseFloat(b.getText().toString()));
                 }
-                Float shil = bxam.get(0);
-                Float dolr = bxam.get(1);
-                Float quid = bxam.get(2);
-                Float peny = bxam.get(3);
-
-                Log.d(tag, "on click check" + shil +dolr + quid+ peny);
-                boolean over50 = (shil+dolr+quid+peny)<=50;
-                boolean nothing_entered = shil.equals(z) && dolr.equals(z) && quid.equals(z) && peny.equals(z);
-                boolean negative_deposit = shil> MainActivity.getWalletoverlord().get(0) || dolr > MainActivity.getWalletoverlord().get(1)
-                        || quid > MainActivity.getWalletoverlord().get(2) || peny > MainActivity.getWalletoverlord().get(3);
-
-                Log.d(tag, "testy"+shil+dolr+quid+peny);
-
-                if (nothing_entered){
-                    Toast.makeText(BankActivity.this , "Cannot deposit nothing",Toast.LENGTH_LONG).show();
-                    Log.d(tag, "preforming 0 task");
-                }
-                else if (negative_deposit){
-                    Toast.makeText(BankActivity.this , "Nice try \n you can't deposit more than you have",Toast.LENGTH_LONG).show();
-                    Log.d(tag, "preforming 1 task");
-                }
-                else if(!over50){
-                    Toast.makeText(BankActivity.this , "You can only deposit 50 coinz in one day",Toast.LENGTH_LONG).show();
-                    Log.d(tag, "preforming 3 task");
-                }
-                else if (!negative_deposit && !nothing_entered) {
-                    setSdeposit(shil); setDdeposit(dolr); setQdeposit(quid); setPdeposit(peny);
-                    Log.d(tag, "on click check" + getSdeposit() +getDdeposit() + getQdeposit()+ getPdeposit());
-                    startActivity(new Intent(BankActivity.this, BankPopUp.class));
-                    Log.d(tag, "preforming 2 task");
-                }
-                else { Log.d(tag, "LEEK");}
             }
+            Float shil = bxam.get(0);
+            Float dolr = bxam.get(1);
+            Float quid = bxam.get(2);
+            Float peny = bxam.get(3);
+
+            Log.d(tag, "on click check" + shil +dolr + quid+ peny);
+            boolean overdeposit = (shil+dolr+quid+peny+BankPopUp.getCpd()>25);
+            boolean over25 = (shil+dolr+quid+peny)<=25;
+            boolean nothing_entered = shil.equals(z) && dolr.equals(z) && quid.equals(z) && peny.equals(z);
+            boolean negative_deposit = shil> MainActivity.getWalletoverlord().get(0) || dolr > MainActivity.getWalletoverlord().get(1)
+                    || quid > MainActivity.getWalletoverlord().get(2) || peny > MainActivity.getWalletoverlord().get(3);
+
+            Log.d(tag, "testy"+shil+dolr+quid+peny);
+
+            if (nothing_entered){
+                Toast.makeText(BankActivity.this , "Cannot deposit nothing",Toast.LENGTH_LONG).show();
+                Log.d(tag, "preforming 0 task");
+            }
+            else if (negative_deposit){
+                Toast.makeText(BankActivity.this , "Nice try \n you can't deposit more than you have",Toast.LENGTH_LONG).show();
+                Log.d(tag, "preforming 1 task");
+            }
+            else if(!over25 ){
+                Toast.makeText(BankActivity.this , "You can only deposit 25 coinz in one day",Toast.LENGTH_LONG).show();
+                Log.d(tag, "preforming 3 task");
+            }
+            else if(overdeposit){
+                Toast.makeText(BankActivity.this , "This deposit will put you over your 25 coin limit \n try again",Toast.LENGTH_LONG).show();
+                Log.d(tag, "preforming 3 task");
+            }
+            else if (!negative_deposit && !nothing_entered) {
+                setSdeposit(shil); setDdeposit(dolr); setQdeposit(quid); setPdeposit(peny);
+                Log.d(tag, "on click check" + getSdeposit() +getDdeposit() + getQdeposit()+ getPdeposit());
+                startActivity(new Intent(BankActivity.this, BankPopUp.class));
+                Log.d(tag, "preforming 2 task");
+            }
+            else { Log.d(tag, "LEEK");}
         });
 
         TextView ex = findViewById(R.id.exchrates);

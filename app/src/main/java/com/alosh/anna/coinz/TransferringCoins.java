@@ -28,59 +28,6 @@ public class TransferringCoins extends AppCompatActivity {
     private String tag = "Transfer";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static ArrayList<Float> fwallet;
-    public void setfwallet(String w)
-    {
-        if (!w.contains("[")){
-            String[] tok = w.split(", ");
-            ArrayList<Float> nw = new ArrayList<Float>();
-
-            for (String t : tok) {
-
-                nw.add(Float.parseFloat(t));
-            }
-            fwallet = nw;}
-        else {
-            String p = w.substring(1, w.length()-1);
-
-            String[] tok = p.split(", ");
-            ArrayList<Float> nw = new ArrayList<Float>();
-
-            for (String t : tok) {
-
-                nw.add(Float.parseFloat(t));
-                fwallet = nw;
-            }
-        }
-    }
-    public static ArrayList<Float> getfwallet(){
-        return fwallet;
-    }
-
-
-    private static float fbank;
-    public static void setfbank(float b) {
-        fbank = b;
-    }
-    public static float getfbank() {
-        return fbank;
-    }
-
-
-    private static ArrayList<String> ffrend;
-    public static void setffrend(String s)
-    {    if (s.contains("[")){
-        String p = s.substring(1, s.length()-1);
-        ArrayList<String> myList = new ArrayList<>(Arrays.asList(p.split(",")));
-        ffrend = myList;}
-    else{
-        ArrayList<String> myList = new ArrayList<>(Arrays.asList(s.split(",")));
-        ffrend = myList;}
-
-    }
-    public static ArrayList<String> getffrend(){
-        return ffrend;
-    }
 
 
     @Override
@@ -109,93 +56,85 @@ public class TransferringCoins extends AppCompatActivity {
         CollectionReference Users = db.collection("Users");
 
 
-        Button send = (Button) findViewById(R.id.sendmoney);
-        send.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //adds to amount array
-                EditText st = (EditText) findViewById(R.id.shilamount); amounts.add(st);
-                EditText dt = (EditText) findViewById(R.id.dolramount); amounts.add(dt);
-                EditText qt = (EditText) findViewById(R.id.quidamount); amounts.add(qt);
-                EditText pt = (EditText) findViewById(R.id.penyamount); amounts.add(pt);
-                //this is zero
-                Float z = Float.parseFloat("0.0");
-                Log.d(tag, "amount check"+amounts);
-                //checks if user left a blank box and creates an array of the differing amounts
-                for (EditText a : amounts) {
-                    if (a.getText().toString().isEmpty()) {
-                        stamounts.add(z);
-                    } else {
-                        stamounts.add(Float.parseFloat(a.getText().toString()));
-                    }
+        Button send =  findViewById(R.id.sendmoney);
+        send.setOnClickListener(v -> {
+            //adds to amount array
+            EditText st = findViewById(R.id.shilamount); amounts.add(st);
+            EditText dt = findViewById(R.id.dolramount); amounts.add(dt);
+            EditText qt = findViewById(R.id.quidamount); amounts.add(qt);
+            EditText pt = findViewById(R.id.penyamount); amounts.add(pt);
+            //this is zero
+            Float z = Float.parseFloat("0.0");
+            Log.d(tag, "amount check"+amounts);
+            //checks if user left a blank box and creates an array of the differing amounts
+            for (EditText a : amounts) {
+                if (a.getText().toString().isEmpty()) {
+                    stamounts.add(z);
+                } else {
+                    stamounts.add(Float.parseFloat(a.getText().toString()));
                 }
-
-                Log.d(tag, "on click check" + stamounts);
-                //self explanatory bools put them here to look nice
-                boolean nothing_entered = stamounts.get(0).equals(z) && stamounts.get(1).equals(z) && stamounts.get(2).equals(z) && stamounts.get(3).equals(z);
-                boolean negative_deposit = stamounts.get(0)> MainActivity.getWalletoverlord().get(0) || stamounts.get(1) > MainActivity.getWalletoverlord().get(1)
-                        || stamounts.get(2) > MainActivity.getWalletoverlord().get(2) || stamounts.get(3) > MainActivity.getWalletoverlord().get(3);
-
-
-                if (nothing_entered){
-                    Toast.makeText(TransferringCoins.this , "Cannot deposit nothing",Toast.LENGTH_LONG).show();
-                    Log.d(tag, "preforming 0 task");
-                }
-
-                else if (negative_deposit){
-                    Toast.makeText(TransferringCoins.this , "Nice try \n you can't deposit more than you have",Toast.LENGTH_LONG).show();
-                    Log.d(tag, "preforming 1 task");
-                }
-
-                else if (!negative_deposit && !nothing_entered) {
-                    //updates wallet
-                    ArrayList<Float> updatedwallet = new ArrayList<Float>();
-                    for (int i =0; i<4; i++){
-                        updatedwallet.add(i,(MainActivity.getWalletoverlord().get(i) - stamounts.get(i)));
-                        MainActivity.getWalletoverlord().remove(i);
-                        MainActivity.getWalletoverlord().add(i,updatedwallet.get(i));
-                    }
-                    Log.d(tag,"trans"+ MainActivity.getWalletoverlord().toString());
-
-                    //sends firestore updated data
-                    Map<String, Object> data1 = new HashMap<>();
-                    //array of coinz in wallet, in the order shil, dolr, quid, peny
-                    data1.put("Wallet", MainActivity.getWalletoverlord());
-                    data1.put("Friends", MainActivity.getFriendsoverlord());
-                    data1.put("BankCoinz", MainActivity.getBankoverlord());
-                    Users.document(mAuth.getCurrentUser().getEmail()).set(data1);
-
-                    //gets friends data to update
-
-                    //converts transfer into gold
-                    ArrayList<Float> ex = MainActivity.getCurrencyEx();
-                    float transfered= stamounts.get(0)*ex.get(0) + stamounts.get(1)*ex.get(1) + stamounts.get(2)*ex.get(2) +stamounts.get(3)*ex.get(3);
-                    Log.d(tag,"trans"+transfered);
-
-                    //stores transferred gold in a seperate firestore document to be acessed went friend opens app
-                    Map<String, Object> data2 = new HashMap<>();
-                    data2.put("coinz", fbank+transfered);
-                    Users.document(VIP+"transferred").set(data2);
-                    startActivity(new Intent(TransferringCoins.this, WalletActivity.class));
-                    Toast.makeText(TransferringCoins.this , "Deposit successful! \nYou transferred: "+transfered +"GOLD to ur homie",Toast.LENGTH_LONG).show();
-
-                }
-                else { Log.d(tag, "LEEK");}
             }
-        });
+
+            Log.d(tag, "on click check" + stamounts);
+            //self explanatory bools put them here to look nice
+            boolean nothing_entered = stamounts.get(0).equals(z) && stamounts.get(1).equals(z) && stamounts.get(2).equals(z) && stamounts.get(3).equals(z);
+            boolean negative_deposit = stamounts.get(0)> MainActivity.getWalletoverlord().get(0) || stamounts.get(1) > MainActivity.getWalletoverlord().get(1)
+                    || stamounts.get(2) > MainActivity.getWalletoverlord().get(2) || stamounts.get(3) > MainActivity.getWalletoverlord().get(3);
 
 
+            if (nothing_entered){
+                Toast.makeText(TransferringCoins.this , "Cannot deposit nothing",Toast.LENGTH_LONG).show();
+                Log.d(tag, "preforming 0 task");
+            }
 
+            else if (negative_deposit){
+                Toast.makeText(TransferringCoins.this , "Nice try \n you can't deposit more than you have",Toast.LENGTH_LONG).show();
+                Log.d(tag, "preforming 1 task");
+            }
 
+            else if (!negative_deposit && !nothing_entered) {
+                //updates wallet
+                ArrayList<Float> updatedwallet = new ArrayList<>();
+                for (int i =0; i<4; i++){
+                    updatedwallet.add(i,(MainActivity.getWalletoverlord().get(i) - stamounts.get(i)));
+                    MainActivity.getWalletoverlord().remove(i);
+                    MainActivity.getWalletoverlord().add(i,updatedwallet.get(i));
+                }
+                Log.d(tag,"trans"+ MainActivity.getWalletoverlord().toString());
 
+                //sends firestore updated data
+                Map<String, Object> data1 = new HashMap<>();
+                //array of coinz in wallet, in the order shil, dolr, quid, peny
+                data1.put("Wallet", MainActivity.getWalletoverlord());
+                data1.put("Friends", MainActivity.getFriendsoverlord());
+                data1.put("BankCoinz", MainActivity.getBankoverlord());
+                Users.document(email).set(data1);
 
-        Button back = (Button) findViewById(R.id.button2);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+                //gets friends data to update
+
+                //converts transfer into gold
+                ArrayList<Float> ex = MainActivity.getCurrencyEx();
+                float transfered= stamounts.get(0)*ex.get(0) + stamounts.get(1)*ex.get(1) + stamounts.get(2)*ex.get(2) +stamounts.get(3)*ex.get(3);
+                Log.d(tag,"trans"+transfered);
+
+                //stores transferred gold in a seperate firestore document to be acessed went friend opens app
+                Map<String, Object> data2 = new HashMap<>();
+                data2.put("coinz", transfered);
+                Users.document(VIP+"transferred").set(data2);
                 startActivity(new Intent(TransferringCoins.this, WalletActivity.class));
+                Toast.makeText(TransferringCoins.this , "Deposit successful! \nYou transferred: "+transfered +"GOLD to ur homie",Toast.LENGTH_LONG).show();
+
             }
+            else { Log.d(tag, "LEEK");}
         });
+
+
+
+
+
+
+        Button back = findViewById(R.id.button2);
+        back.setOnClickListener(v -> startActivity(new Intent(TransferringCoins.this, WalletActivity.class)));
 
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);

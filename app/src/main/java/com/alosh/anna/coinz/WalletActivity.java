@@ -31,31 +31,18 @@ public class WalletActivity extends AppCompatActivity {
 
 
         FloatingActionButton back = findViewById(R.id.wbacktomap);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(WalletActivity.this, MainActivity.class));
-            }
-        });
+        back.setOnClickListener(view -> startActivity(new Intent(WalletActivity.this, MainActivity.class)));
 
 
         Button sendmonies = findViewById(R.id.button);
-        sendmonies.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(WalletActivity.this, MoniesPopUp.class));
-            }
-        });
+        sendmonies.setOnClickListener(view -> startActivity(new Intent(WalletActivity.this, MoniesPopUp.class)));
 
 
         //signs out
         Button signout = findViewById(R.id.signout);
-        signout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mAuth.signOut();
-                startActivity(new Intent(WalletActivity.this, SignupActivity.class));
-            }
+        signout.setOnClickListener(view -> {
+            mAuth.signOut();
+            startActivity(new Intent(WalletActivity.this, LoginActivity.class));
         });
 
 

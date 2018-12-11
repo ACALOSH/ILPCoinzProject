@@ -26,9 +26,10 @@ import java.util.Map;
 public class BankPopUp extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private String tag ="Bank popup";
     //cpd is current coin count as to not go over the 50 coin limit
-    private float cpd; public void setCpd(float cpd) { this.cpd = cpd; } public float getCpd() { return cpd; }
+    private static float cpd;
+    public void setCpd(float cpd) { BankPopUp.cpd = cpd; }
+    public static float getCpd() { return cpd; }
     //this is to help keep track of the day so the limit resets
     private String saveddate; public void setSaveddate(String saveddate) { this.saveddate = saveddate; }
 
@@ -54,6 +55,7 @@ public class BankPopUp extends AppCompatActivity {
         //checks the daay, if savedate ==null then its the user's first day and we set it at the current date
         String toddate = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault()).format(new Date());
         if(saveddate ==null){setSaveddate(toddate);}
+        String tag = "Bank popup";
         Log.d(tag,toddate+"  "+saveddate);
         //if the day is not the same then we reset the coin limit counter and save the date as today
         if(!(saveddate.compareTo(toddate)==0)){
@@ -64,55 +66,44 @@ public class BankPopUp extends AppCompatActivity {
 
 
         Button back = findViewById(R.id.backk);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(BankPopUp.this, BankActivity.class));
-            }
-        });
+        back.setOnClickListener(v -> startActivity(new Intent(BankPopUp.this, BankActivity.class)));
 
 
 
 
         Button depositt = findViewById(R.id.depositt);
-        depositt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //checks how many coinz have been deposited
-                if (cpd>50){Toast.makeText(BankPopUp.this , "You've gone over your 50 coin limit+",Toast.LENGTH_LONG).show();
-                }
-
-                //updates bank balance
-                float bankbalance = (MainActivity.getBankoverlord() +deposit);
-
-                //update wallet
-                ArrayList<Float> depositwallet = new ArrayList<> (Arrays.asList(BankActivity.getSdeposit(), BankActivity.getDdeposit(), BankActivity.getQdeposit(), BankActivity.getPdeposit()));
-                ArrayList<Float> updatedwallet = new ArrayList<>();
-                for (int i =0; i<4; i++){
-                    updatedwallet.add(i,(MainActivity.getWalletoverlord().get(i) - depositwallet.get(i)));
-                    MainActivity.getWalletoverlord().remove(i);
-                    MainActivity.getWalletoverlord().add(i,updatedwallet.get(i));
-                }
-
-                //updates values in firestore
-                Map<String, Object> data1 = new HashMap<>();
-                //array of coinz in wallet, in the order shil, dolr, quid, peny
-                data1.put("Wallet", MainActivity.getWalletoverlord());
-                data1.put("BankCoinz", bankbalance);
-                data1.put("Friends", MainActivity.getFriendsoverlord());
-                Users.document(email).set(data1);
-
-                //updates coin limit counter
-                setCpd(getCpd()+coinzadded);
-
-                //goes back to bank
-                startActivity(new Intent(BankPopUp.this, BankActivity.class));
-                Toast.makeText(BankPopUp.this , "Deposit successful! \nBank balance: "+bankbalance,Toast.LENGTH_LONG).show();
+        depositt.setOnClickListener(v -> {
+            //checks how many coinz have been deposited
+            if (cpd>50){Toast.makeText(BankPopUp.this , "You've gone over your 50 coin limit+",Toast.LENGTH_LONG).show();
             }
+
+            //updates bank balance
+            float bankbalance = (MainActivity.getBankoverlord() +deposit);
+
+            //update wallet
+            ArrayList<Float> depositwallet = new ArrayList<> (Arrays.asList(BankActivity.getSdeposit(), BankActivity.getDdeposit(), BankActivity.getQdeposit(), BankActivity.getPdeposit()));
+            ArrayList<Float> updatedwallet = new ArrayList<>();
+            for (int i =0; i<4; i++){
+                updatedwallet.add(i,(MainActivity.getWalletoverlord().get(i) - depositwallet.get(i)));
+                MainActivity.getWalletoverlord().remove(i);
+                MainActivity.getWalletoverlord().add(i,updatedwallet.get(i));
+            }
+
+            //updates values in firestore
+            Map<String, Object> data1 = new HashMap<>();
+            //array of coinz in wallet, in the order shil, dolr, quid, peny
+            data1.put("Wallet", MainActivity.getWalletoverlord());
+            data1.put("BankCoinz", bankbalance);
+            data1.put("Friends", MainActivity.getFriendsoverlord());
+            Users.document(email).set(data1);
+
+            //updates coin limit counter
+            setCpd(getCpd()+coinzadded);
+
+            //goes back to bank
+            startActivity(new Intent(BankPopUp.this, BankActivity.class));
+            Toast.makeText(BankPopUp.this , "Deposit successful! \nBank balance: "+bankbalance,Toast.LENGTH_LONG).show();
         });
-
-
-
 
 
 

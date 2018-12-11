@@ -46,35 +46,27 @@ public class MoniesPopUp extends AppCompatActivity {
 
 
         Button bye =  findViewById(R.id.bye);
-        bye.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MoniesPopUp.this, WalletActivity.class));
-            }
-        });
+        bye.setOnClickListener(v -> startActivity(new Intent(MoniesPopUp.this, WalletActivity.class)));
 
         EditText hemail = findViewById(R.id.addhomie);
         Button add = findViewById(R.id.addhomiebutton);
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (hemail ==null || hemail.getText().toString().equals(" ")) {
-                    Toast.makeText(MoniesPopUp.this, "enter an email!", Toast.LENGTH_LONG).show();
-                }
-                else {
-                    //tried to get the query system to work but idk why its  not working
-                    //Query isuser = db.collection("User").whereEqualTo("name", hemail.getText().toString());
-
-                    ArrayList<String> updatefriends = MainActivity.getFriendsoverlord();
-                    String hm = hemail.getText().toString();
-                    //checks if added friend is already a friend
-                    if (!(updatefriends.contains(hm))){
-                    updatefriends.add(hm);
-                    MainActivity.setFriendsoverlord(updatefriends.toString());
-                    }
-                }
-
+        add.setOnClickListener(v -> {
+            if (hemail ==null || hemail.getText().toString().equals(" ")) {
+                Toast.makeText(MoniesPopUp.this, "enter an email!", Toast.LENGTH_LONG).show();
             }
+            else {
+                //tried to get the query system to work but idk why its  not working
+                //Query isuser = db.collection("User").whereEqualTo("name", hemail.getText().toString());
+
+                ArrayList<String> updatefriends = MainActivity.getFriendsoverlord();
+                String hm = hemail.getText().toString();
+                //checks if added friend is already a friend
+                if (!(updatefriends.contains(hm))){
+                updatefriends.add(hm);
+                MainActivity.setFriendsoverlord(updatefriends.toString());
+                }
+            }
+
         });
 
         //this makes it a popup window
